@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clerk-app-deployment
+  labels:
+    app: clerk-app
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: clerk-app
+  template:
+    metadata:
+      labels:
+        app: clerk-app
+    spec:
+      containers:
+        - name: clerk-app-container
+          image: triple3a/clerk-app.io:latest 
+          env:
+          - name: BASE_URL
+            value: "http://192.168.59.100:32703"
+
+          - name: CLERK_PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: clerk-api-secrets
+                key: CLERK_PUBLIC_KEY
+          - name: CLERK_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: clerk-api-secrets
+                key: CLERK_PRIVATE_KEY
+          ports:
+            - containerPort: 3000 
+          livenessProbe: 
+            httpGet:
+              path: /feeds/clerk.json
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe: 
+            httpGet:
+              path: /feeds/clerk.json
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
