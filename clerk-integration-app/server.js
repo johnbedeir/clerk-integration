@@ -3,7 +3,6 @@ const express = require('express');
 const axios = require('axios');
 const path = require('path');
 const bodyParser = require('body-parser');
-
 const app = express();
 app.use(bodyParser.json());
 
@@ -13,16 +12,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Clerk.io API keys (fetched from the .env file)
 const CLERK_PUBLIC_KEY = process.env.CLERK_PUBLIC_KEY;
 const CLERK_PRIVATE_KEY = process.env.CLERK_PRIVATE_KEY;
-// const CLERK_PRIVATE_KEY = 'A8GrSnUPZe7SuiJbDo0wvfrIsEGOKgqE';
-// const CLERK_PUBLIC_KEY = 'z302WqefffdZvW0Qr2BFbzyuyS6P9xut'; 
-
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const CLERK_API_URL = process.env.CLERK_API_URL
 
 // Example route: Fetch products
-app.get('/products', async (req, res) => {
+app.get('/api/products', async (req, res) => {
     try {
         // Include the public key as a query parameter
-        const url = `https://api.clerk.io/v2/product/list?key=${CLERK_PUBLIC_KEY}`;
+        const url = `${CLERK_API_URL}${CLERK_PUBLIC_KEY}`;
 
         const response = await axios.get(url, {
             headers: {
