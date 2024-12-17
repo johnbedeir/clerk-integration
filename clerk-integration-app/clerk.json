@@ -5,8 +5,8 @@
       "name": "Product 1",
       "description": "A sample product description.",
       "price": 29.99,
-      "url": "${BASE_URL}/products/product-1",
-      "image": "${BASE_URL}/images/product-1.jpg",
+      "url": "http://clerk.johnydev.com/products/product-1",
+      "image": "http://clerk.johnydev.com/images/product-1.jpg",
       "categories": ["category-1", "category-2"],
       "stock": 100
     },
@@ -15,8 +15,8 @@
       "name": "Product 2",
       "description": "Another product description.",
       "price": 49.99,
-      "url": "${BASE_URL}/products/product-2",
-      "image": "${BASE_URL}/images/product-2.jpg",
+      "url": "http://clerk.johnydev.com/products/product-2",
+      "image": "http://clerk.johnydev.com/images/product-2.jpg",
       "categories": ["category-1"],
       "stock": 50
     }

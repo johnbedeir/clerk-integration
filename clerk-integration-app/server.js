@@ -13,23 +13,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Clerk.io API keys (fetched from the .env file)
 const CLERK_PUBLIC_KEY = process.env.CLERK_PUBLIC_KEY;
 const CLERK_PRIVATE_KEY = process.env.CLERK_PRIVATE_KEY;
+// const CLERK_PRIVATE_KEY = 'A8GrSnUPZe7SuiJbDo0wvfrIsEGOKgqE';
+// const CLERK_PUBLIC_KEY = 'z302WqefffdZvW0Qr2BFbzyuyS6P9xut'; 
+
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
-// // Example route: Fetch products
-// app.get('/api/products', async (req, res) => {
-//     try {
-//         const response = await axios.get('https://api.clerk.io/v2/product/list', {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${CLERK_PRIVATE_KEY}`
-//             }
-//         });
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error fetching products:', error.message);
-//         res.status(500).json({ error: 'Failed to fetch products' });
-//     }
-// });
+// Example route: Fetch products
+app.get('/products', async (req, res) => {
+    try {
+        // Include the public key as a query parameter
+        const url = `https://api.clerk.io/v2/product/list?key=${CLERK_PUBLIC_KEY}`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${CLERK_PRIVATE_KEY}`
+            }
+        });
+
+        // Return the API response to the client
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching products:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to fetch products' });
+    }
+});
 
 app.get('/feeds/clerk.json', (req, res) => {
     const clerkFeed = {
@@ -39,8 +47,8 @@ app.get('/feeds/clerk.json', (req, res) => {
                 name: "Product 1",
                 description: "A sample product description.",
                 price: 29.99,
-                url: "${BASE_URL}/products/product-1",
-                image: "${BASE_URL}/images/product-1.jpg",
+                url: `http://clerk.johnydev.com/products/product-1`,  
+                image: `http://clerk.johnydev.com/images/product-1.jpg`, 
                 categories: ["category-1", "category-2"],
                 stock: 100
             },
@@ -49,14 +57,16 @@ app.get('/feeds/clerk.json', (req, res) => {
                 name: "Product 2",
                 description: "Another product description.",
                 price: 49.99,
-                url: "${BASE_URL}/products/product-2",
-                image: "${BASE_URL}/images/product-2.jpg",
+                url: `http://clerk.johnydev.com/products/product-2`,  
+                image: `http://clerk.johnydev.com/images/product-2.jpg`, 
                 categories: ["category-1"],
                 stock: 50
             }
         ]
     };
 
+    // Log output for debugging
+    console.log('Serving clerk.json:', JSON.stringify(clerkFeed, null, 2));
     res.json(clerkFeed);
 });
 
