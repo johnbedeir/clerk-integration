@@ -36,16 +36,4 @@ spec:
                   name: clerk-k8s-secrets
                   key: CLERK_API_URL                  
           ports:
-            - containerPort: 3000 
-          livenessProbe: 
-            httpGet:
-              path: /feeds/clerk.json
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe: 
-            httpGet:
-              path: /feeds/clerk.json
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            - containerPort: 3000
