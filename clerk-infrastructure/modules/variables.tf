@@ -1,3 +1,7 @@
+variable "clerk_public_key" {}
+variable "clerk_private_key" {}
+variable "clerk_api_url" {}
+
 variable "ecr_name" {
   type    = string
   default = "clerk-app"
