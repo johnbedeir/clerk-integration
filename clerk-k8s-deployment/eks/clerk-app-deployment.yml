@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clerk-app-deployment
+  labels:
+    app: clerk-app
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: clerk-app
+  template:
+    metadata:
+      labels:
+        app: clerk-app
+    spec:
+      containers:
+        - name: clerk-app-container
+          image: 702551696126.dkr.ecr.eu-central-1.amazonaws.com/dev-cluster-1-clerk-app
+          env:
+          - name: BASE_URL
+            value: clerk.johnydev.com
+          - name: CLERK_PUBLIC_KEY
+            valueFrom:
+              secretKeyRef:
+                name: clerk-api-secrets
+                key: CLERK_PUBLIC_KEY
+          - name: CLERK_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: clerk-api-secrets
+                key: CLERK_PRIVATE_KEY
+          ports:
+            - containerPort: 3000 
+          livenessProbe: 
+            httpGet:
+              path: /feeds/clerk.json
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe: 
+            httpGet:
+              path: /feeds/clerk.json
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
