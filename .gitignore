@@ -1,0 +1,7 @@
+.DS*
+.history
+*.tfvars
+.terragrunt*
+.terraform.*
+.env
+node_modules/
