@@ -1,5 +1,7 @@
 # Clerk-API-Wrapper: Deployment Guide
 
+<img src=imgs/cover.png>
+
 ## Overview
 
 The **Clerk-API-Wrapper** is a comprehensive application that integrates with Clerk.io to manage product data efficiently. The application is designed to leverage modern DevOps practices, ensuring a secure and scalable infrastructure. Using Terraform, Terragrunt, and Kubernetes, the deployment automates secrets management, infrastructure creation, and application provisioning.
