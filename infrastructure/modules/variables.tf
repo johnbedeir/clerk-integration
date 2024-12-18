@@ -34,13 +34,13 @@ variable "min_number_of_nodes" {
 
 variable "max_number_of_nodes" {
   type        = number
-  default     = 4
+  default     = 3
   description = "Maximum number of nodes"
 }
 
 variable "desired_number_of_nodes" {
   type        = number
-  default     = 3
+  default     = 2
   description = "Desired number of nodes"
 }
 
