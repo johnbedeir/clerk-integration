@@ -1,151 +1,186 @@
-# clerk-integration
+# Clerk-API-Wrapper: Deployment Guide
 
-### 1. Build infrastructure
+## Overview
 
-Navigate to `infrastructure` directory and run the following command
+The **Clerk-API-Wrapper** is a comprehensive application that integrates with Clerk.io to manage product data efficiently. The application is designed to leverage modern DevOps practices, ensuring a secure and scalable infrastructure. Using Terraform, Terragrunt, and Kubernetes, the deployment automates secrets management, infrastructure creation, and application provisioning.
 
-```
-terragrunt run-all apply
-```
+### Key Features:
 
-### 2. Post-building infrastructure
+- **Secrets Management**: Terraform creates secrets in AWS Secrets Manager based on the `terraform.tfvars` file. These secrets are automatically fetched by Kubernetes using ClusterSecretStore and ExternalSecrets to create Kubernetes secrets for application deployment.
+- **Infrastructure as Code**: The infrastructure is defined using Terraform and managed with Terragrunt for efficient multi-environment deployments.
+- **Modern Deployment Practices**: Supports both Kubernetes manifests and Helm charts for deployment, providing flexibility and scalability.
 
-Navigate to the [Application GitHub Repository](https://github.com/johnbedeir/clerk-integration) > `Actions` Tab and run the latest `Workflow` to make sure the `Docker Image` is built and pushed to the `ECR`
+### Tools Required:
 
-`Make sure you commit the recent updates before you do that`
+To run this project, ensure the following tools are installed:
 
-### 3. Before deployment
+- **Terragrunt**: For managing Terraform configurations `dev` and `prod` environment.
+- **Terraform**: For defining infrastructure as code.
+- **AWS CLI**: For managing AWS resources and EKS clusters.
+- **Kubernetes CLI (kubectl)**: For interacting with Kubernetes clusters.
+- **Docker**: For building container images.
 
-Update the `kubeconfig` by running the following command:
+---
 
-```
-aws eks update-kubeconfig --name cluster-1-dev --region eu-central-1
-```
+## Deployment Steps
 
-### 4. Application Deployment
+### 1. Pre-Build Setup
 
-### Deploy Via `Kubernetes`
+1. **Create `terraform.tfvars`**:
+   Navigate to `infrastructure/modules` directory and create a `terraform.tfvars` file with the following format:
 
-Create namespace
+   ```terraform
+   clerk_public_key  = "n4UsgwDE3uhUr9FRd3B7H4ygzDv5d0rX"
+   clerk_private_key = "es78AlQ9YAYOPjV24lnC1Xh9UmJYaGc8"
+   clerk_api_url = "https://api.clerk.io/v2/product/list?key="
+   ```
 
-```
-kubectl create ns dev-clerk-app
-```
+   > Obtain the `Public API Key` and `Private API Key` from the Clerk dashboard under `Settings > API Keys`.
 
-Navigate to `k8s` directory and run the following command:
+2. **Secrets Management**:
+   Terraform will create secrets in AWS Secrets Manager using the values from `terraform.tfvars`. These secrets will be fetched into Kubernetes as environment variables via ClusterSecretStore and ExternalSecrets.
 
-```
-kubectl apply -n dev-clerk-app -f eks/
-```
+---
 
-This will deploy the application `deployment`, `service` and `external secrets`
+### 2. Build Infrastructure
 
-### (Optional) Deploy via `Helm Chart`
+1. Navigate to the `infrastructure` directory.
+2. Run the following command:
 
-For deploying the application via `Helm`, Navigate to the [Chart Repository](https://github.com/johnbedeir/clerk-app-chart) and follow the steps in the `README`
+   ```sh
+   terragrunt run-all apply
+   ```
 
-### 5. Before Accessing the Application
+   > This will provision the necessary AWS resources, including the EKS cluster, VPC, and Secrets Manager entries.
 
-Navigate to your `Domain CPanel` and update the `Zone Editor` with `CNAME` using the `Ingress LoadBalancer`
+---
 
-### a. fetch the LoadBalancers URLs from Kubernetes:
+### 3. Post-Build Steps
 
-#### Application URL
+1. **Build and Push Docker Image**:
+   Navigate to the [Application GitHub Repository](https://github.com/johnbedeir/clerk-integration), go to the `Actions` tab, and run the latest workflow to ensure the Docker image is built and pushed to AWS ECR.
 
-```
-kubectl get svc clerk-app-service -n dev-clerk-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-```
+   > Commit any recent updates before triggering the workflow.
 
-Add the URL to `clerk.johnydev.com`
+    <img src=imgs/ecr.png>
 
-#### Ingress URL
+### 4. Kubernetes Configuration
 
-```
-kubectl get svc nginx-ingress-ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-```
+1. **Update kubeconfig**:
+   Run the following command to configure `kubectl` for the EKS cluster:
 
-Add the URL to `alertmanager.johnydev.com`, `prometheus.johnydev.com` and `grafana.johnydev.com`
+   ```sh
+   aws eks update-kubeconfig --name cluster-1-dev --region eu-central-1
+   ```
 
-#### ArgoCD URL
+   <img src=imgs/eks.png>
 
-```
-kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
-```
+---
 
-Add the URL to `argocd.johnydev.com`
+### 5. Application Deployment
 
-### b. Update the `CNAME` Record as shown
+#### Option 1: Deploy via Kubernetes Manifests
 
-<img src=imgs/cpanel.png>
+1. Create the namespace:
 
-### c. Access the applications using the following URLs
+   ```sh
+   kubectl create ns dev-clerk-app
+   ```
 
-#### Prometheus
+2. Deploy the application:
 
-```
-prometheus.johnydev.com
-```
+   ```sh
+   kubectl apply -n dev-clerk-app -f k8s/eks/
+   ```
 
-#### AlertManager
+   > This deploys the application, including Deployment, Service, and ExternalSecrets.
 
-```
-alertmanager.johnydev.com
-```
+#### Option 2: Deploy via Helm Chart
 
-#### Access Application
+1. Navigate to the [Chart Repository](https://github.com/johnbedeir/clerk-app-chart).
+2. Follow the steps in the `README` to deploy the application using Helm.
 
-```
-clerk.johnydev.com
-```
+---
 
-#### Check `clerk.json`
+### 6. Configuring DNS Records
 
-```
-clerk.johnydev.com/feeds/clerk.json
-```
+1. **Fetch Load Balancer URLs**:
+   Use the following commands to retrieve the LoadBalancer URLs for various services:
 
-Copy that URL to your `clerk.io` Data sync
+   - **Application Service**:
 
-<img src=imgs/data-sync.png>
+     ```sh
+     kubectl get svc clerk-app-service -n dev-clerk-app -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+     ```
 
-#### ArgoCD
+   - **Ingress Controller**:
 
-```
-argocd.johnydev.com
-```
+     ```sh
+     kubectl get svc nginx-ingress-ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+     ```
 
-Login using `admin` username
+   - **ArgoCD**:
+     ```sh
+     kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+     ```
 
-Fetch the `password` from `k8s secrets` using the following command:
+2. **Update DNS Records**:
+   Add the following CNAME records in your domain’s DNS zone editor:
 
-```
-kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode; echo
-```
+   | Service      | CNAME                       |
+   | ------------ | --------------------------- |
+   | Application  | `clerk.johnydev.com`        |
+   | Prometheus   | `prometheus.johnydev.com`   |
+   | AlertManager | `alertmanager.johnydev.com` |
+   | Grafana      | `grafana.johnydev.com`      |
+   | ArgoCD       | `argocd.johnydev.com`       |
 
-Add `+ New App` give it a name and then deploy using either `k8s manifests` or `Helm Chart`
+    <img src=imgs/cpanel.png>
 
-Option 1: `GitHub Repository`
+### 7. Accessing Applications
 
-```
-https://github.com/johnbedeir/clerk-integration
-```
+- **Prometheus**:
+  Navigate to `prometheus.johnydev.com`.
 
-Add the `kubernetes manifest files` path
+  <img src=imgs/prometheus.png>
 
-```
-k8s/eks
-```
+- **AlertManager**:
+  Navigate to `alertmanager.johnydev.com`.
 
-And `Namespace`
+  <img src=imgs/alertmanager.png>
 
-```
-dev-clerk-app
-```
+- **Clerk Application**:
+  Navigate to `clerk.johnydev.com`.
 
-You should see your app
+  <img src=imgs/clerk.png>
 
-#### Grafana
+  Verify the data feed at `clerk.johnydev.com/feeds/clerk.json`. Copy this URL into the Clerk.io Data Sync settings.
 
-```
-grafana.johny
-```
+  <img src=imgs/data-sync.png>
+
+- **ArgoCD**:
+  Navigate to `argocd.johnydev.com`.
+
+  Login Credentials:
+
+  - Username: `admin`
+  - Password: Retrieve using:
+    ```sh
+    kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode; echo
+    ```
+
+  Add a new application via GitHub or Helm Chart as required.
+
+  <img src=imgs/argocd.png>
+
+- **Grafana**:
+  Navigate to `grafana.johnydev.com`.
+
+  Login Credentials:
+
+  - Username: `admin`
+  - Password: `admin`
+
+  Navigate to Dashboards and select the preferred dashboard.
+
+  <img src=imgs/grafana.png>
