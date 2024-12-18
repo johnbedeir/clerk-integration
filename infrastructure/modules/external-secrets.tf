@@ -52,48 +52,33 @@ resource "aws_iam_role_policy_attachment" "attach_external_secrets_policy" {
   policy_arn = aws_iam_policy.external_secrets_policy.arn
 }
 
-resource "kubernetes_manifest" "aws_secret_store" {
-  manifest = {
-    "apiVersion" = "external-secrets.io/v1beta1"
-    "kind"       = "ClusterSecretStore"
-    "metadata" = {
-      "name" = "aws-secret-store"
-    }
-    "spec" = {
-      "provider" = {
-        "aws" = {
-          "service" = "SecretsManager"
-          "region"  = "${var.region}" 
-          "auth" = {
-            "jwt" = {
-              "serviceAccountRef" = {
-                "name" = "external-secrets-sa"
-                "namespace" = "external-secrets"
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 resource "helm_release" "external_secrets" {
-  name       = "external-secrets"
-  namespace  = "external-secrets"
-
-  repository = "https://charts.external-secrets.io"
-  chart      = "external-secrets"
-  version    = "0.11.0"
-
+  name             = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  chart            = "external-secrets"
+  version          = "0.9.9"
+  namespace        = "external-secrets"
   create_namespace = true
 
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+
   values = [
-    <<-EOF
-    installCRDs: true
-    serviceAccount:
-      create: true
-      name: external-secrets-sa
-    EOF
+    <<EOF
+clusterSecretStores:
+  - name: aws-secret-store
+    spec:
+      provider:
+        aws:
+          service: SecretsManager
+          region: ${var.region}
+          auth:
+            jwt:
+              serviceAccountRef:
+                name: external-secrets-sa
+                namespace: external-secrets
+EOF
   ]
 }
