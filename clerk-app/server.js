@@ -17,7 +17,6 @@ const CLERK_API_URL = process.env.CLERK_API_URL
 
 app.get('/api/products', async (req, res) => {
     try {
-        // Include the public key as a query parameter
         const url = `${CLERK_API_URL}${CLERK_PUBLIC_KEY}`;
 
         const response = await axios.get(url, {
@@ -27,7 +26,6 @@ app.get('/api/products', async (req, res) => {
             }
         });
 
-        // Return the API response to the client
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching products:', error.response ? error.response.data : error.message);
@@ -44,7 +42,7 @@ app.get('/feeds/clerk.json', (req, res) => {
                 description: "A sample product description.",
                 price: 29.99,
                 url: `${BASE_URL}/products/product-1`,  
-                image: `${BASE_URL}/images/product-1.jpg`, 
+                image: `${BASE_URL}/images/product-1.png`, 
                 categories: ["category-1", "category-2"],
                 stock: 100
             },
@@ -54,7 +52,7 @@ app.get('/feeds/clerk.json', (req, res) => {
                 description: "Another product description.",
                 price: 49.99,
                 url: `${BASE_URL}/products/product-2`,  
-                image: `${BASE_URL}/images/product-2.jpg`, 
+                image: `${BASE_URL}/images/product-2.png`, 
                 categories: ["category-1"],
                 stock: 50
             }
@@ -64,7 +62,6 @@ app.get('/feeds/clerk.json', (req, res) => {
     res.json(clerkFeed);
 });
 
-// Dynamic order confirmation route
 app.get('/api/order-confirmation', (req, res) => {
     const order = {
         id: '12345',
@@ -78,7 +75,6 @@ app.get('/api/order-confirmation', (req, res) => {
     res.json(order);
 });
 
-// Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Backend server running on http://localhost:${PORT}`);

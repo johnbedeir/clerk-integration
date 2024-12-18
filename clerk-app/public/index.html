@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JohnyDev Store</title>
+    <link rel="stylesheet" href="styles.css">
     <script type="text/javascript">
         (function(w, d) {
             var e = d.createElement('script'); e.type = 'text/javascript'; e.async = true;
@@ -13,19 +14,54 @@
         })(window, document);
 
         Clerk('config', {
-            key: 'z302WqefffdZvW0Qr2BFbzyuyS6P9xut'
+            key: 'n4UsgwDE3uhUr9FRd3B7H4ygzDv5d0rX'
         });
     </script>
 </head>
 <body>
-    <h1>Welcome to JohnyDev Store</h1>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <h1>JohnyDev Store</h1>
+        </div>
+    </header>
 
-    <div id="product-recommendations"></div>
-    <script>
-        Clerk('content', 'product-recommendations', {
-            template: 'your-template-name',
-            products: ['product-id-1', 'product-id-2']
-        });
-    </script>
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <input id="search-input" type="text" placeholder="Search for products..." />
+            <button class="search-button">🔍 Search</button>
+            <!-- Clerk Live Search -->
+            <div class="clerk-live-search">
+                <span class="clerk"
+                    data-template="@live-search"
+                    data-instant-search="#search-input"
+                    data-instant-search-positioning="right"
+                    data-instant-search-categories="6"
+                    data-instant-search-pages="6"
+                    data-instant-search-suggestions="6">
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Filters -->
+        <aside class="filters-section">
+            <h2>Filters</h2>
+            <div id="clerk-search-filters"></div>
+        </aside>
+
+        <!-- Search Results -->
+        <section class="results-section">
+            <div id="clerk-search-results"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 JohnyDev Store. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
