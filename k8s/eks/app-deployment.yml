@@ -19,7 +19,7 @@ spec:
           image: 702551696126.dkr.ecr.eu-central-1.amazonaws.com/dev-cluster-1-clerk-app
           env:
             - name: BASE_URL
-              value: clerk.johnydev.com
+              value: "https://clerk.johnydev.com"
             - name: CLERK_PUBLIC_KEY
               valueFrom:
                 secretKeyRef:
