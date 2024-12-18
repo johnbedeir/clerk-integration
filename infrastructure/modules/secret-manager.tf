@@ -1,3 +1,6 @@
+##############################################################
+# SECRET MANAGER
+##############################################################
 resource "aws_secretsmanager_secret" "clerk_secrets" {
   name        = "clerk-app-secrets"
   description = "Secrets for Clerk application"

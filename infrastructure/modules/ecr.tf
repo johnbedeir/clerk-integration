@@ -1,3 +1,7 @@
+##############################################################
+# ECR REPOSITORY
+##############################################################
+
 resource "aws_ecr_repository" "ecr_repo" {
   name = "${var.environment}-${var.name_prefix}-${var.ecr_name}"
 

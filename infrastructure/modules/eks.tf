@@ -1,3 +1,7 @@
+##############################################################
+# CLUSTER COFIGURATION
+##############################################################
+
 data "aws_availability_zones" "available" {}
 
 data "aws_eks_cluster" "cluster" {
@@ -76,7 +80,6 @@ module "eks" {
     }
   }
 
-  # Extend node-to-node security group rules
   node_security_group_additional_rules = {
     ingress_self_all = {
       description = "Node to node all ports/protocols"
@@ -97,16 +100,15 @@ module "eks" {
     }
   }
 
-  # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
   }
 
   eks_managed_node_groups = {
     system = {
-      min_size     = 1
-      max_size     = 5
-      desired_size = 4
+      min_size     = var.min_number_of_nodes
+      max_size     = var.max_number_of_nodes
+      desired_size = var.desired_number_of_nodes
 
       instance_types = var.asg_sys_instance_types
       labels = {
@@ -129,11 +131,9 @@ module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
   eks    = module.eks
 
-  # map developer & admin ARNs as kubernetes Users
   map_users = concat(local.admin_user_map_users, local.developer_user_map_users)
 }
 
-# Create IAM role + automatically make it available to cluster autoscaler service account
 module "iam_assumable_role_admin" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "~> 4.0"

@@ -1,3 +1,7 @@
+##############################################################
+# EXTERNAL SECRETS
+##############################################################
+
 resource "aws_iam_role" "external_secrets_role" {
   name = "${var.environment}-${var.name_prefix}-external-secret-role"
 

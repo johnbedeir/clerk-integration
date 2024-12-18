@@ -1,3 +1,7 @@
+##############################################################
+# VARIABLES
+##############################################################
+
 variable "clerk_public_key" {}
 variable "clerk_private_key" {}
 variable "clerk_api_url" {}
@@ -20,6 +24,24 @@ variable "region" {
 
 variable "environment" {
   type    = string
+}
+
+variable "min_number_of_nodes" {
+  type        = number
+  default     = 1
+  description = "Minimum number of nodes"
+}
+
+variable "max_number_of_nodes" {
+  type        = number
+  default     = 4
+  description = "Maximum number of nodes"
+}
+
+variable "desired_number_of_nodes" {
+  type        = number
+  default     = 3
+  description = "Desired number of nodes"
 }
 
 variable "admin_users" {

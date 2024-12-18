@@ -1,3 +1,7 @@
+##############################################################
+# CLUSTER AUTOSCALER
+##############################################################
+
 resource "aws_iam_policy" "cluster_autoscaler" {
   name_prefix = "${local.cluster_name}-cluster-autoscaler"
   description = "EKS cluster-autoscaler policy for cluster ${module.eks.cluster_id}"

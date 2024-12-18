@@ -1,5 +1,7 @@
+##############################################################
+# MONITORING STACK
 # Make sure to update YOUR_DOMAIN to match the build.sh script
-
+##############################################################
 variable "kube_monitoring_stack_values" {
   type    = string
   default = <<-EOF
@@ -64,34 +66,34 @@ variable "kube_monitoring_stack_values" {
         serviceMonitorSelector: {}
         resources:
           limits:
-            memory: 2Gi
+            memory: 1Gi
           requests:
-            cpu: 500m
-            memory: 2Gi
+            cpu: 250m
+            memory: 512Mi
 
     prometheus-node-exporter:
       resources:
         limits:
-          memory: 30Mi
+          memory: 20Mi
         requests:
-          cpu: 20m
-          memory: 30Mi
+          cpu: 10m
+          memory: 20Mi
 
     kube-state-metrics:
       resources:
         limits:
-          memory: 300Mi
+          memory: 200Mi
         requests:
           cpu: 10m
-          memory: 300Mi
+          memory: 100Mi
 
     prometheusOperator:
       resources:
         limits:
-          memory: 400Mi
+          memory: 300Mi
         requests:
           cpu: 10m
-          memory: 400Mi
+          memory: 200Mi
     EOF
 }
 
