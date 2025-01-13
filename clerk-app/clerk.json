@@ -29,6 +29,16 @@
       "image": "http://clerk.johnydev.com/images/product-2.jpg",
       "categories": ["category-1"],
       "stock": 50
-    }    
+    },
+    {
+      "id": "product-4",
+      "name": "Product 4",
+      "description": "Another product description.",
+      "price": 10.99,
+      "url": "http://clerk.johnydev.com/products/product-4",
+      "image": "http://clerk.johnydev.com/images/product-2.jpg",
+      "categories": ["category-1"],
+      "stock": 50
+    }  
   ]
 }
