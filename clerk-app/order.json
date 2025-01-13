@@ -1,0 +1,21 @@
+{
+  "id": "12345",
+  "email": "clerk.outward296@simplelogin.com",
+  "products": [
+    {
+      "id": "prod-1",
+      "quantity": 2,
+      "price": 29.99
+    },
+    {
+      "id": "prod-2",
+      "quantity": 1,
+      "price": 49.99
+    },
+    {
+      "id": "prod-3",
+      "quantity": 1,
+      "price": 10.99
+    }    
+  ]
+}

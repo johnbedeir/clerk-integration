@@ -15,6 +15,7 @@ const CLERK_PRIVATE_KEY = process.env.CLERK_PRIVATE_KEY;
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const CLERK_API_URL = process.env.CLERK_API_URL
 const clerkFeed = require('./clerk.json');
+const orderData = require('./order.json'); 
 
 app.get('/api/products', async (req, res) => {
     try {
@@ -39,16 +40,7 @@ app.get('/feeds/clerk.json', (req, res) => {
 });
 
 app.get('/api/order-confirmation', (req, res) => {
-    const order = {
-        id: '12345',
-        email: 'clerk.outward296@simplelogin.com',
-        products: [
-            { id: 'prod-1', quantity: 2, price: 29.99 },
-            { id: 'prod-2', quantity: 1, price: 49.99 }
-        ]
-    };
-
-    res.json(order);
+    res.json(orderData);
 });
 
 const PORT = 3000;
