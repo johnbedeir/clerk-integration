@@ -22,8 +22,8 @@ resource "aws_iam_role" "external_secrets_role" {
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
           StringEquals = {
-            "oidc.eks.eu-central-1.amazonaws.com/id/26A320EAE3336C65AC2D28A16A66E1C2:sub" = "system:serviceaccount:external-secrets:external-secrets-sa",
-            "oidc.eks.eu-central-1.amazonaws.com/id/26A320EAE3336C65AC2D28A16A66E1C2:aud" = "sts.amazonaws.com"
+            "oidc.eks.eu-central-1.amazonaws.com/id/0E9776CCD653EB56BB6556C3B2F8AF69:sub" = "system:serviceaccount:external-secrets:external-secrets-sa",
+            "oidc.eks.eu-central-1.amazonaws.com/id/0E9776CCD653EB56BB6556C3B2F8AF69:aud" = "sts.amazonaws.com"
           }
         }
       }
