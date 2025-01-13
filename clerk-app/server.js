@@ -14,6 +14,7 @@ const CLERK_PUBLIC_KEY = process.env.CLERK_PUBLIC_KEY;
 const CLERK_PRIVATE_KEY = process.env.CLERK_PRIVATE_KEY;
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const CLERK_API_URL = process.env.CLERK_API_URL
+const clerkFeed = require('./clerk.json');
 
 app.get('/api/products', async (req, res) => {
     try {
@@ -34,31 +35,6 @@ app.get('/api/products', async (req, res) => {
 });
 
 app.get('/feeds/clerk.json', (req, res) => {
-    const clerkFeed = {
-        products: [
-            {
-                id: "product-1",
-                name: "Product 1",
-                description: "A sample product description.",
-                price: 29.99,
-                url: `${BASE_URL}/products/product-1`,  
-                image: `${BASE_URL}/images/product-1.png`, 
-                categories: ["category-1", "category-2"],
-                stock: 100
-            },
-            {
-                id: "product-2",
-                name: "Product 2",
-                description: "Another product description.",
-                price: 49.99,
-                url: `${BASE_URL}/products/product-2`,  
-                image: `${BASE_URL}/images/product-2.png`, 
-                categories: ["category-1"],
-                stock: 50
-            }
-        ]
-    };
-
     res.json(clerkFeed);
 });
 
