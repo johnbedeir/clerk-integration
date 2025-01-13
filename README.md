@@ -57,18 +57,10 @@ To run this project, ensure the following tools are installed:
 
 ---
 
-### 3. Post-Build Steps
-
-1. **Build and Push Docker Image**:
-   Navigate to the [Application GitHub Repository](https://github.com/johnbedeir/clerk-integration), go to the `Actions` tab, and run the latest workflow to ensure the Docker image is built and pushed to AWS ECR.
-
-   > Commit any recent updates before triggering the workflow.
-
-    <img src=imgs/ecr.png>
-
-### 4. Kubernetes Configuration
+### 4. Post-Build Steps
 
 1. **Update kubeconfig**:
+
    Run the following command to configure `kubectl` for the EKS cluster:
 
    ```sh
@@ -76,6 +68,26 @@ To run this project, ensure the following tools are installed:
    ```
 
    <img src=imgs/eks.png>
+
+   Encode the kubeconfig:
+
+   ```
+   cat .kube/config | base64
+   ```
+
+   Copy the output to github secrets.
+
+### 4. Continuous Integration and Continuous Deployment
+
+Make sure you run the following script to add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to store aws credentials in github secrets.
+
+Navigate to the [Application GitHub Repository](https://github.com/johnbedeir/clerk-integration), go to the `Actions` tab, and run the latest workflow to ensure the Docker image is built and pushed to AWS ECR.
+
+> Commit any recent updates before triggering the workflow.
+
+    <img src=imgs/ecr.png>
+
+Once the workflow is successfully done the `Continuous Deployment` will run automatically.
 
 ---
 
