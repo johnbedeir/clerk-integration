@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: clerk-app-deployment
+  namespace: dev-clerk-app
   labels:
     app: clerk-app
 spec:
